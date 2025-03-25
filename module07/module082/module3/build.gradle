@@ -1,26 +1,40 @@
 plugins {
-  id 'com.android.library'
-  id 'org.jetbrains.kotlin.android'
+  id 'org.jetbrains.kotlin.multiplatform'
+  id 'com.android.kotlin.multiplatform.library'
 }
-android {
-  compileSdkVersion = 'android-32'
-  defaultConfig {
-    minSdkVersion 24
-    targetSdkVersion 31
+
+kotlin {
+  androidLibrary {
+    namespace = "com.android.example.module_de64facf"
+    compileSdk = 31
+    minSdk = 24
+
+      withAndroidTestOnDeviceBuilder {
+        it.compilationName = "instrumentedTest"
+        it.defaultSourceSetName = "androidInstrumentedTest"
+        it.sourceSetTreeName = "test"
+      }
+
+      withAndroidTestOnJvmBuilder {
+        it.defaultSourceSetName = "androidUnitTest"
+      }
+
+      sourceSets {
+        androidMain {
+          dependencies {
+      compileOnly("androidx.annotation:annotation:1.0.0")
+      implementation("org.jetbrains.kotlin:kotlin-bom:1.7.20")
+        }
+      }
+      androidInstrumentedTest {
+        dependencies {
+      implementation("androidx.annotation:annotation:1.0.0")
+        }
+      }
+      androidUnitTest {
+        dependencies {
+        }
+      }
+    }
   }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = '1.8'
-  }
-  buildFeatures {
-    buildConfig = false
-  }
-}
-dependencies {
-  androidTestImplementation 'androidx.annotation:annotation:1.0.0'
-  compileOnly 'androidx.annotation:annotation:1.0.0'
-  implementation 'org.jetbrains.kotlin:kotlin-bom:1.7.20'
 }

@@ -1,27 +1,45 @@
 plugins {
-  id 'com.android.library'
+  id 'org.jetbrains.kotlin.multiplatform'
+  id 'com.android.kotlin.multiplatform.library'
 }
-android {
-  compileSdkVersion = 'android-32'
-  defaultConfig {
-    minSdkVersion 25
-    targetSdkVersion 25
+
+kotlin {
+  androidLibrary {
+    namespace = "com.android.example.module_0ee626ff"
+    compileSdk = 31
+    minSdk = 24
+
+      withAndroidTestOnDeviceBuilder {
+        it.compilationName = "instrumentedTest"
+        it.defaultSourceSetName = "androidInstrumentedTest"
+        it.sourceSetTreeName = "test"
+      }
+
+      withAndroidTestOnJvmBuilder {
+        it.defaultSourceSetName = "androidUnitTest"
+      }
+
+      sourceSets {
+        androidMain {
+          dependencies {
+      annotationProcessor("com.google.dagger:dagger-compiler:2.43.1")
+      api(project(":module07:module194:module1"))
+      api(project(":module09:module2:module1"))
+      api(project(":module15:module1:module1"))
+      api(project(":module23:module5:module22"))
+      api("com.google.dagger:dagger:2.43.1")
+      compileOnly("androidx.annotation:annotation:1.0.0")
+        }
+      }
+      androidInstrumentedTest {
+        dependencies {
+      implementation("androidx.annotation:annotation:1.0.0")
+        }
+      }
+      androidUnitTest {
+        dependencies {
+        }
+      }
+    }
   }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  buildFeatures {
-    buildConfig = false
-  }
-}
-dependencies {
-  androidTestImplementation 'androidx.annotation:annotation:1.0.0'
-  annotationProcessor 'com.google.dagger:dagger-compiler:2.43.1'
-  api project(':module07:module194:module1')
-  api project(':module09:module2:module1')
-  api project(':module15:module1:module1')
-  api project(':module23:module5:module22')
-  api 'com.google.dagger:dagger:2.43.1'
-  compileOnly 'androidx.annotation:annotation:1.0.0'
 }
